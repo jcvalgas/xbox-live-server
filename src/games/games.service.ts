@@ -1,18 +1,20 @@
 import { Injectable } from "@nestjs/common";
+import { PrismaService } from "src/prisma/prisma.service";
 import { CreateGamesDto } from "./dto/create-games.dto";
 import { Game } from "./entities/games.entity";
 
 @Injectable()
 export class GamesService{
-    games: Game[] = [];
+    constructor(private readonly prisma: PrismaService){}
 
     findAll(){
-        return this.games;
+        return this.prisma.game.findMany();
     }
 
     create(createGamesDto: CreateGamesDto){
-        const game: Game = {id: 'random id', ...createGamesDto};
-        this.games.push(game);
-        return game;
+        const game: Game = {...createGamesDto};
+        return this.prisma.game.create({
+            data: game,
+        });
     }
 }

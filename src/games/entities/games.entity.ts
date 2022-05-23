@@ -1,5 +1,5 @@
 export class Game {
-    id: string
+    id?: string
     title: string
     coverImageUrl: string
     description: string
