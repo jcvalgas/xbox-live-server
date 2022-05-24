@@ -21,3 +21,10 @@ model Game {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+model Gender {
+  id String @id @default(uuid())
+  name String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

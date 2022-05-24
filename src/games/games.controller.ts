@@ -20,7 +20,7 @@ export class GamesController {
 
     @Get(':id')
     @ApiOperation({
-        summary: 'Visualizar um jogo',
+        summary: 'Visualizar um jogo pelo id',
     })
     findOne(@Param('id') id: string): Promise<Game>{
         return this.gamesService.findOne(id)
