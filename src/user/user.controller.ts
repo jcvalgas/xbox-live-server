@@ -9,14 +9,6 @@ import { ApiOperation, ApiTags } from '@nestjs/swagger';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @Post()
-  @ApiOperation({
-    summary: 'Criar um usuário',
-  })
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.userService.create(createUserDto);
-  }
-
   @Get()
   @ApiOperation({
     summary: 'Listar todos os usuários',
@@ -31,6 +23,14 @@ export class UserController {
   })
   findOne(@Param('id') id: string) {
     return this.userService.findOne(id);
+  }
+
+  @Post()
+  @ApiOperation({
+    summary: 'Criar um usuário',
+  })
+  create(@Body() createUserDto: CreateUserDto) {
+    return this.userService.create(createUserDto);
   }
 
   @Patch(':id')

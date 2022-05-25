@@ -16,7 +16,7 @@ export class GenderService{
         const record = await this.prisma.gender.findUnique({where: {id}});
 
         if(!record) {
-            throw new NotFoundException(`Registro com o ${id} não encontrado`);
+            throw new NotFoundException(`Registro com o id '${id}' não foi encontrado`);
         }
 
         return record;

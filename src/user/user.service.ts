@@ -27,7 +27,7 @@ export class UserService {
     const record = await this.prisma.user.findUnique({where: {id}, select: this.userSelect});
 
     if(!record){
-      throw new NotFoundException(`Registro com o id ${id} não encontrado`);
+      throw new NotFoundException(`Registro com o id '${id}' não foi encontrado`);
     }
 
     return record;
