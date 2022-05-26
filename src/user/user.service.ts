@@ -4,6 +4,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 import { handleError } from 'src/utils/handle-error.util';
+import * as bcrypt from 'bcrypt'
 
 @Injectable()
 export class UserService {
@@ -42,6 +43,7 @@ export class UserService {
     delete createUserDto.confirmPassword;
     const data: User = {
       ...createUserDto,
+      password: await bcrypt.hash(createUserDto.password, 10)
     };
 
     return this.prisma.user.create({data, select: this.userSelect}).catch(handleError);
@@ -58,6 +60,10 @@ export class UserService {
     delete updateUserDto.confirmPassword;
     const data: Partial<User> = {
       ...updateUserDto
+    }
+
+    if(data.password){
+      data.password = await bcrypt.hash(data.password, 10);
     }
 
     return this.prisma.user.update({
