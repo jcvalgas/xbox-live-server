@@ -3,6 +3,8 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateProfileDto } from './dto/create-profile.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { Profile } from './entities/profile.entity';
+import { handleError } from 'src/utils/handle-error.util';
+
 
 @Injectable()
 export class ProfileService {
@@ -25,7 +27,7 @@ export class ProfileService {
 
   create(createProfileDto: CreateProfileDto) {
     const data: Profile = {...createProfileDto};
-    return this.prisma.profile.create({data}).catch(this.handleError);
+    return this.prisma.profile.create({data}).catch(handleError);
   }
 
   async update(id: string, updateProfileDto: UpdateProfileDto) {
@@ -37,18 +39,5 @@ export class ProfileService {
   async delete(id: string) {
     await this.findOne(id);
     await this.prisma.profile.delete({where: {id}});
-  }
-
-  handleError(error: Error): undefined {
-    const errorLines = error.message?.split('\n');
-    const lastErrorLine = errorLines[errorLines.length - 1]?.trim();
-
-    if (!lastErrorLine) {
-      console.error(error);
-    }
-
-    throw new UnprocessableEntityException(
-      lastErrorLine || 'Algum erro ocorreu ao executar a operação',
-    );
   }
 }
