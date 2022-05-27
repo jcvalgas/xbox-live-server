@@ -18,6 +18,11 @@ model Game {
   trailerYoutubeUrl String
   gameplayYoutubeUrl String
 
+  gender Gender @relation(fields: [genderId], references: [id])
+  genderId String @map("gender_id")
+
+  profiles Profile[]
+
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
@@ -30,16 +35,21 @@ model Gender {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
+  games Game[]
+  profiles Profile[]
+
   @@map("gender")
 }
 
 model User {
   id String @id @default(uuid())
-  name String @unique
+  name String
   email String @unique
   password String
   cpf Int @unique
   isAdmin Boolean
+
+  profiles Profile[]
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -51,6 +61,12 @@ model Profile {
   id String @id @default(uuid())
   title String
   imageUrl String
+
+  user User @relation(fields: [userId], references: [id])
+  userId String @map("user_id")
+
+  games Game[]
+  genders Gender[]
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
