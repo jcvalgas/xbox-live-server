@@ -65,7 +65,7 @@ model Profile {
   user User @relation(fields: [userId], references: [id])
   userId String @map("user_id")
 
-  games Game[]
+  favoritos Game[]
   genders Gender[]
 
   createdAt DateTime @default(now()) @map("created_at")
