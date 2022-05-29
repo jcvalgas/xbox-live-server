@@ -18,8 +18,7 @@ model Game {
   trailerYoutubeUrl String
   gameplayYoutubeUrl String
 
-  gender Gender @relation(fields: [genderId], references: [id])
-  genderId String @map("gender_id")
+  gender Gender[]
 
   profiles Profile[]
 
@@ -36,7 +35,6 @@ model Gender {
   updatedAt DateTime @updatedAt @map("updated_at")
 
   games Game[]
-  profiles Profile[]
 
   @@map("gender")
 }
@@ -66,7 +64,6 @@ model Profile {
   userId String @map("user_id")
 
   favoritos Game[]
-  genders Gender[]
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
