@@ -36,7 +36,7 @@ export class ProfileService {
             id: true,
             coverImageUrl: true,
             description: true,
-            gender: {
+            genders: {
               select: {
                 name: true,
               }
@@ -65,7 +65,7 @@ export class ProfileService {
   }
 
   async update(id: string, updateProfileDto: UpdateProfileDto) {
-    const data: Prisma.ProfileCreateInput = {
+    const data: Prisma.ProfileUpdateInput = {
       title: updateProfileDto.title,
       imageUrl: updateProfileDto.imageUrl,
       user: {
