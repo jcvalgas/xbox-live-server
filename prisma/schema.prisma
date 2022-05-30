@@ -11,12 +11,12 @@ datasource db {
 model Game {
   id  String  @id @default(uuid())
   title String @unique
-  coverImageUrl String
+  coverImageUrl String @map("cover_image_url")
   description String
   year Int
-  imdbScore Float
-  trailerYoutubeUrl String
-  gameplayYoutubeUrl String
+  imdbScore Float @map("imdb_score")
+  trailerYoutubeUrl String @map("trailer_youtube_url")
+  gameplayYoutubeUrl String @map("gameplay_youtube_url")
 
   gender Gender[]
 
@@ -45,7 +45,7 @@ model User {
   email String @unique
   password String
   cpf Int @unique
-  isAdmin Boolean
+  isAdmin Boolean @map("is_admin")
 
   profiles Profile[]
 
@@ -58,7 +58,7 @@ model User {
 model Profile {
   id String @id @default(uuid())
   title String
-  imageUrl String
+  imageUrl String @map("image_url")
 
   user User @relation(fields: [userId], references: [id])
   userId String @map("user_id")
