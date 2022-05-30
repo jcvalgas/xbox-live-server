@@ -92,13 +92,11 @@ export class ProfileService {
         favoritos: true,
       }
     })
-  }
+  };
 
 
   async delete(id: string) {
-    return this.prisma.profile.delete({
-      where: {id}
-    })
+    return this.prisma.profile.delete({where: {id}}).catch(handleError);
   }
 }
 

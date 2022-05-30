@@ -27,7 +27,7 @@ export class CreateProfileDto {
     @IsUUID(undefined, {each: true})
     @ApiProperty({
         description: 'Lista dos IDs dos jogos favoritos do perfil',
-        example: ["1223319d-248d-406a-89a5-5bbbd8689a76", "2a8fc3ea-a995-4644-8a92-f66d38c702e5"]
+        example: []
     })
     favoritos: string[];
 }
