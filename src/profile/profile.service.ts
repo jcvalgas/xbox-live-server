@@ -51,26 +51,26 @@ export class ProfileService {
     })
   }
 
-  create(createProfileDto: CreateProfileDto) {
+  create(userId: string, createProfileDto: CreateProfileDto) {
     const data: Prisma.ProfileCreateInput = {
       title: createProfileDto.title,
       imageUrl: createProfileDto.imageUrl,
       user: {
         connect: {
-          id: createProfileDto.userId,
+          id: userId,
         }
       }
     }
     return this.prisma.profile.create({data}).catch(handleError);
   }
 
-  async update(id: string, updateProfileDto: UpdateProfileDto) {
+  async update(userId: string, id: string, updateProfileDto: UpdateProfileDto) {
     const data: Prisma.ProfileUpdateInput = {
       title: updateProfileDto.title,
       imageUrl: updateProfileDto.imageUrl,
       user: {
         connect: {
-          id: updateProfileDto.userId,
+          id: userId,
         }
       },
       favoritos: {

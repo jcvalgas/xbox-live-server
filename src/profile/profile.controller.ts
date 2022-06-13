@@ -4,6 +4,8 @@ import { CreateProfileDto } from './dto/create-profile.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
+import { LoggedUser } from 'src/auth/logged-user.decorator';
+import { User } from 'src/user/entities/user.entity';
 
 @ApiTags('profile')
 @UseGuards(AuthGuard())
@@ -32,16 +34,16 @@ export class ProfileController {
   @ApiOperation({
     summary: 'Criar perfil de usuário',
   })
-  create(@Body() createProfileDto: CreateProfileDto) {
-    return this.profileService.create(createProfileDto);
+  create(@LoggedUser() user: User, @Body() createProfileDto: CreateProfileDto) {
+    return this.profileService.create(user.id, createProfileDto);
   }
 
   @Patch(':id')
   @ApiOperation({
     summary: 'Atualizar perfil de usuário'
   })
-  update(@Param('id') id: string, @Body() updateProfileDto: UpdateProfileDto) {
-    return this.profileService.update(id, updateProfileDto);
+  update(@LoggedUser() user: User, @Param('id') id: string, @Body() updateProfileDto: UpdateProfileDto) {
+    return this.profileService.update(user.id, id, updateProfileDto);
   }
 
   @Delete(':id')

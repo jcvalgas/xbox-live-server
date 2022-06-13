@@ -17,13 +17,6 @@ export class CreateProfileDto {
     })
     imageUrl: string;
 
-    @IsUUID()
-    @ApiProperty({
-        description: 'Id do usuário do perfil',
-        example: 'f0619828-a065-4502-856b-92ede4c9bb65'
-    })
-    userId: string;
-
     @IsUUID(undefined, {each: true})
     @ApiProperty({
         description: 'Lista dos IDs dos jogos favoritos do perfil',
