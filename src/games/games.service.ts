@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { Injectable, NotFoundException, UnauthorizedException } from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
 import { CreateGamesDto } from "./dto/create-games.dto";
 import { UpdateGameDto } from "./dto/update-games.dto";
@@ -51,7 +51,11 @@ export class GamesService{
         }).catch(handleError);
     }
 
-    create(createGamesDto: CreateGamesDto){
+    create(isAdmin: boolean, createGamesDto: CreateGamesDto){
+        if(!isAdmin) {
+            throw new UnauthorizedException('Usuário não é um administrador para executar essa tarefa');
+        }
+
         const data: Prisma.GameCreateInput = {
             title: createGamesDto.title,
             coverImageUrl: createGamesDto.coverImageUrl,
@@ -69,7 +73,10 @@ export class GamesService{
         }).catch(handleError);
     }
 
-    async update(id: string, dto: UpdateGameDto) {
+    async update(isAdmin: boolean, id: string, dto: UpdateGameDto) {
+        if(!isAdmin) {
+            throw new UnauthorizedException('Usuário não é um administrador para executar essa tarefa');
+        }
         const data: Prisma.GameUpdateInput = {
             ...dto,
             genders: {
@@ -79,7 +86,10 @@ export class GamesService{
         return this.prisma.game.update({where: {id}, data}).catch(handleError);
     }
 
-    async delete(id: string) {
+    async delete(isAdmin: boolean, id: string) {
+        if(!isAdmin) {
+            throw new UnauthorizedException('Usuário não é um administrador para executar essa tarefa');
+        }
         await this.findById(id);
         await this.prisma.game.delete({where: {id}}).catch(handleError);
     }

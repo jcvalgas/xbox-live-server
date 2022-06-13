@@ -4,6 +4,8 @@ import { CreateGamesDto } from "./dto/create-games.dto";
 import { GamesService } from "./games.service";
 import { UpdateGameDto } from "./dto/update-games.dto";
 import { AuthGuard } from "@nestjs/passport";
+import { LoggedUser } from "src/auth/logged-user.decorator";
+import { User } from "src/user/entities/user.entity";
 
 @ApiTags('games')
 @UseGuards(AuthGuard())
@@ -32,16 +34,16 @@ export class GamesController {
     @ApiOperation({
         summary: 'Criar um jogo',
     })
-    create(@Body() dto: CreateGamesDto){
-        return this.gamesService.create(dto);
+    create(@LoggedUser() user: User, @Body() dto: CreateGamesDto){
+        return this.gamesService.create(user.isAdmin, dto);
     }
 
     @Patch(':id')
     @ApiOperation({
         summary: 'Editar um jogo pelo id',
     })
-    update(@Param('id') id: string, @Body() dto: UpdateGameDto){
-        return this.gamesService.update(id, dto)
+    update(@LoggedUser() user: User, @Param('id') id: string, @Body() dto: UpdateGameDto){
+        return this.gamesService.update(user.isAdmin, id, dto)
     }
 
     @Delete(':id')
@@ -49,7 +51,7 @@ export class GamesController {
     @ApiOperation({
         summary: 'Remover um jogo pelo id'
     })
-    delete(@Param('id') id: string) {
-        return this.gamesService.delete(id);
+    delete(@LoggedUser() user: User, @Param('id') id: string) {
+        return this.gamesService.delete(user.isAdmin, id);
     }
 }

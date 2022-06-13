@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { handleError } from 'src/utils/handle-error.util';
@@ -22,21 +22,18 @@ export class UserService {
 
   constructor(private readonly prisma: PrismaService){}
 
-  findAll(): Promise<User[]> {
+  findAll(isAdmin: boolean): Promise<User[]> {
+    if(!isAdmin) {
+      throw new UnauthorizedException("Usuário não é um administrador para executar essa tarefa")
+    }
     return this.prisma.user.findMany({select: this.userSelect});
   }
 
-  async findOne(id: string): Promise<User> {
-    const record = await this.prisma.user.findUnique({
-      where: {id},
-      select: this.userSelect
-    });
-
-    if(!record){
-      throw new NotFoundException(`Registro com o id '${id}' não foi encontrado`);
+  async findOne(isAdmin: boolean, id: string): Promise<User> {
+    if(!isAdmin) {
+      throw new UnauthorizedException("Usuário não é um administrador para executar essa tarefa")
     }
-
-    return record;
+    return this.findById(id)
   }
 
   async create(createUserDto: CreateUserDto): Promise <User> {
@@ -53,8 +50,11 @@ export class UserService {
     return this.prisma.user.create({data, select: this.userSelect}).catch(handleError);
   }
 
-  async update(id: string, updateUserDto: UpdateUserDto): Promise<User> {
-    await this.findOne(id)
+  async update(isAdmin: boolean, id: string, updateUserDto: UpdateUserDto): Promise<User> {
+    if(!isAdmin) {
+      throw new UnauthorizedException("Usuário não é um administrador para executar essa tarefa")
+    }
+    await this.findById(id)
     if(updateUserDto.password){
       if(updateUserDto.password != updateUserDto.confirmPassword){
         throw new BadRequestException('As senhas informadas não conferem');
@@ -77,8 +77,26 @@ export class UserService {
     })
   }
 
-  async delete(id: string) {
-    await this.findOne(id);
+  async delete(isAdmin: boolean, id: string) {
+    if(!isAdmin) {
+      throw new UnauthorizedException("Usuário não é um administrador para executar essa tarefa");
+    }
+    await this.findById(id);
     await this.prisma.user.delete({where: {id}})
   }
+
+  async findById(id: string) {
+    const record = await this.prisma.user.findUnique({
+      where: {id},
+      select: this.userSelect
+    });
+
+    if(!record){
+      throw new NotFoundException(`Registro com o id '${id}' não foi encontrado`);
+    }
+
+    return record;
+  }
 }
+
+  

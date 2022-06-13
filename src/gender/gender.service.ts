@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { Injectable, NotFoundException, UnauthorizedException } from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
 import { CreateGenderDto } from "./dto/create-gender.dto";
 import { UpdateGenderDto } from "./dto/update-gender.dto";
@@ -28,20 +28,29 @@ export class GenderService{
         return this.findById(id);
     }
 
-    create(createGenderDto: CreateGenderDto): Promise<Gender> {
+    create(isAdmin: boolean, createGenderDto: CreateGenderDto): Promise<Gender> {
+        if(!isAdmin) {
+            throw new UnauthorizedException('Usuário não é um administrador para essa tarefa');
+        }
         const data: Gender = {...createGenderDto};
         return this.prisma.gender.create({
             data,
         }).catch(handleError);
     }
 
-    async update(id: string, dto: UpdateGenderDto): Promise<Gender> {
+    async update(isAdmin: boolean, id: string, dto: UpdateGenderDto): Promise<Gender> {
+        if(!isAdmin) {
+            throw new UnauthorizedException('Usuário não é um administrador para essa tarefa');
+        }
         await this.findById(id)
         const data: Partial<Gender> = {...dto};
         return this.prisma.gender.update({where: {id}, data});
     }
 
-    async delete(id: string) {
+    async delete(isAdmin: boolean, id: string) {
+        if(!isAdmin) {
+            throw new UnauthorizedException('Usuário não é um administrador para essa tarefa');
+        }
         await this.findById(id);
         await this.prisma.gender.delete({where: {id}});
     }

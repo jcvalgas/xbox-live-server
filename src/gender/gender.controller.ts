@@ -1,6 +1,8 @@
 import { Controller, Get, Post, Body, Param, Patch, Delete, HttpCode, HttpStatus, UseGuards } from "@nestjs/common";
 import { AuthGuard } from "@nestjs/passport";
 import { ApiBearerAuth, ApiOperation, ApiTags } from "@nestjs/swagger";
+import { LoggedUser } from "src/auth/logged-user.decorator";
+import { User } from "src/user/entities/user.entity";
 import { CreateGenderDto } from "./dto/create-gender.dto";
 import { UpdateGenderDto } from "./dto/update-gender.dto";
 import { Gender } from "./entities/gender.entity";
@@ -33,16 +35,16 @@ export class GenderController {
     @ApiOperation({
         summary: 'Criar um gênero',
     })
-    create(@Body() dto: CreateGenderDto): Promise<Gender>{
-        return this.genderService.create(dto);
+    create(@LoggedUser() user: User, @Body() dto: CreateGenderDto): Promise<Gender>{
+        return this.genderService.create(user.isAdmin, dto);
     }
 
     @Patch(':id')
     @ApiOperation({
         summary: 'Editar um gênero pelo id',
     })
-    update(@Param('id') id: string, @Body() dto: UpdateGenderDto): Promise<Gender>{
-        return this.genderService.update(id, dto)
+    update(@LoggedUser() user: User, @Param('id') id: string, @Body() dto: UpdateGenderDto): Promise<Gender>{
+        return this.genderService.update(user.isAdmin, id, dto)
     }
 
     @Delete(':id')
@@ -50,7 +52,7 @@ export class GenderController {
     @ApiOperation({
         summary: 'Remover um gênero pelo id'
     })
-    delete(@Param('id') id: string) {
-        return this.genderService.delete(id);
+    delete(@LoggedUser() user: User, @Param('id') id: string) {
+        return this.genderService.delete(user.isAdmin, id);
     }
 }

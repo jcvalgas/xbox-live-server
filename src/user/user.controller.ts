@@ -4,6 +4,8 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
+import { LoggedUser } from 'src/auth/logged-user.decorator';
+import { User } from '@prisma/client';
 
 @ApiTags('user')
 @Controller('user')
@@ -16,8 +18,8 @@ export class UserController {
   @ApiOperation({
     summary: 'Listar todos os usuários',
   })
-  findAll() {
-    return this.userService.findAll();
+  findAll(@LoggedUser() user: User) {
+    return this.userService.findAll(user.isAdmin);
   }
 
   @Get(':id')
@@ -26,8 +28,8 @@ export class UserController {
   @ApiOperation({
     summary: 'Visualizar usuário pelo id',
   })
-  findOne(@Param('id') id: string) {
-    return this.userService.findOne(id);
+  findOne(@LoggedUser() user: User, @Param('id') id: string) {
+    return this.userService.findOne(user.isAdmin, id);
   }
 
   @Post()
@@ -44,8 +46,8 @@ export class UserController {
   @ApiOperation({
     summary: 'Atualizar um usuário pelo id',
   })
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.userService.update(id, updateUserDto);
+  update(@LoggedUser() user: User, @Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+    return this.userService.update(user.isAdmin, id, updateUserDto);
   }
 
   @Delete(':id')
@@ -55,7 +57,7 @@ export class UserController {
   @ApiOperation({
     summary: 'Deletar um usuário pelo id',
   })
-  remove(@Param('id') id: string) {
-    return this.userService.delete(id);
+  remove(@LoggedUser() user: User, @Param('id') id: string) {
+    return this.userService.delete(user.isAdmin, id);
   }
 }
