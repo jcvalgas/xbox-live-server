@@ -1,10 +1,10 @@
-import { BadRequestException, Injectable, NotFoundException, UnprocessableEntityException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import * as bcrypt from 'bcrypt';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { handleError } from 'src/utils/handle-error.util';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
-import { handleError } from 'src/utils/handle-error.util';
-import * as bcrypt from 'bcrypt'
 
 @Injectable()
 export class UserService {
@@ -16,8 +16,8 @@ export class UserService {
     cpf: true,
     isAdmin: false,
     profiles: true,
-    createdAt: true,
-    updatedAt: true
+    createdAt: false,
+    updatedAt: false
   }
 
   constructor(private readonly prisma: PrismaService){}
