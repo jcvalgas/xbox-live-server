@@ -22,17 +22,12 @@ export class UserService {
 
   constructor(private readonly prisma: PrismaService){}
 
-  findAll(isAdmin: boolean): Promise<User[]> {
-    if(!isAdmin) {
-      throw new UnauthorizedException("Usuário não é um administrador para executar essa tarefa")
-    }
+  findAll(): Promise<User[]> {
     return this.prisma.user.findMany({select: this.userSelect});
   }
 
-  async findOne(isAdmin: boolean, id: string): Promise<User> {
-    if(!isAdmin) {
-      throw new UnauthorizedException("Usuário não é um administrador para executar essa tarefa")
-    }
+  async findOne(id: string): Promise<User> {
+    
     return this.findById(id)
   }
 
@@ -50,10 +45,7 @@ export class UserService {
     return this.prisma.user.create({data, select: this.userSelect}).catch(handleError);
   }
 
-  async update(isAdmin: boolean, id: string, updateUserDto: UpdateUserDto): Promise<User> {
-    if(!isAdmin) {
-      throw new UnauthorizedException("Usuário não é um administrador para executar essa tarefa")
-    }
+  async update(id: string, updateUserDto: UpdateUserDto): Promise<User> {
     await this.findById(id)
     if(updateUserDto.password){
       if(updateUserDto.password != updateUserDto.confirmPassword){
@@ -77,10 +69,7 @@ export class UserService {
     })
   }
 
-  async delete(isAdmin: boolean, id: string) {
-    if(!isAdmin) {
-      throw new UnauthorizedException("Usuário não é um administrador para executar essa tarefa");
-    }
+  async delete(id: string) {
     await this.findById(id);
     await this.prisma.user.delete({where: {id}})
   }

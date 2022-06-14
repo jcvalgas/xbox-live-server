@@ -18,8 +18,8 @@ export class UserController {
   @ApiOperation({
     summary: 'Listar todos os usuários',
   })
-  findAll(@LoggedUser() user: User) {
-    return this.userService.findAll(user.isAdmin);
+  findAll() {
+    return this.userService.findAll();
   }
 
   @Get(':id')
@@ -28,8 +28,8 @@ export class UserController {
   @ApiOperation({
     summary: 'Visualizar usuário pelo id',
   })
-  findOne(@LoggedUser() user: User, @Param('id') id: string) {
-    return this.userService.findOne(user.isAdmin, id);
+  findOne(@Param('id') id: string) {
+    return this.userService.findOne(id);
   }
 
   @Post()
@@ -46,8 +46,8 @@ export class UserController {
   @ApiOperation({
     summary: 'Atualizar um usuário pelo id',
   })
-  update(@LoggedUser() user: User, @Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.userService.update(user.isAdmin, id, updateUserDto);
+  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+    return this.userService.update(id, updateUserDto);
   }
 
   @Delete(':id')
@@ -58,6 +58,6 @@ export class UserController {
     summary: 'Deletar um usuário pelo id',
   })
   remove(@LoggedUser() user: User, @Param('id') id: string) {
-    return this.userService.delete(user.isAdmin, id);
+    return this.userService.delete(id);
   }
 }
