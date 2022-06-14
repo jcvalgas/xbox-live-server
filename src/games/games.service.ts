@@ -12,7 +12,10 @@ import { Gender } from "src/gender/entities/gender.entity";
 export class GamesService{
     constructor(private readonly prisma: PrismaService){}
 
-    findAll(){
+    findAll(isAdmin: boolean){
+        if(!isAdmin) {
+            throw new UnauthorizedException('Usuário não é um administrador para executar essa tarefa');
+        }
         return this.prisma.game.findMany({
             select: {
                 id: true,
@@ -37,7 +40,10 @@ export class GamesService{
         return record;
     }
 
-    async findOne(id: string){
+    async findOne(isAdmin: boolean, id: string){
+        if(!isAdmin) {
+            throw new UnauthorizedException('Usuário não é um administrador para executar essa tarefa');
+        }
         await this.findById(id)
         return this.prisma.game.findUnique({
             where: {id},

@@ -10,7 +10,10 @@ import { handleError } from 'src/utils/handle-error.util';
 export class GenderService{
     constructor(private readonly prisma: PrismaService){}
 
-    findAll(): Promise<Gender[]> {
+    findAll(isAdmin: boolean): Promise<Gender[]> {
+        if(!isAdmin) {
+            throw new UnauthorizedException('Usuário não é um administrador para executar essa tarefa');
+        }
         return this.prisma.gender.findMany()
     }
 
@@ -24,7 +27,10 @@ export class GenderService{
         return record;
     }
 
-    findOne(id: string): Promise<Gender> {
+    findOne(isAdmin: boolean, id: string): Promise<Gender> {
+        if(!isAdmin) {
+            throw new UnauthorizedException('Usuário não é um administrador para executar essa tarefa');
+        }
         return this.findById(id);
     }
 

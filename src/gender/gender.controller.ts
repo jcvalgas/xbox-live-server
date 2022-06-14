@@ -19,16 +19,16 @@ export class GenderController {
     @ApiOperation({
         summary: 'Listar todos os gêneros',
     })
-    findAll(): Promise<Gender[]> {
-        return this.genderService.findAll();
+    findAll(@LoggedUser() user: User): Promise<Gender[]> {
+        return this.genderService.findAll(user.isAdmin);
     }
 
     @Get(':id')
     @ApiOperation({
         summary: 'Visualizar um gênero pelo id',
     })
-    findOne(@Param('id') id: string): Promise<Gender>{
-        return this.genderService.findOne(id)
+    findOne(@LoggedUser() user: User, @Param('id') id: string): Promise<Gender>{
+        return this.genderService.findOne(user.isAdmin, id)
     }
 
     @Post()

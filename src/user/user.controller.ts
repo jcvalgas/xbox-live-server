@@ -4,8 +4,6 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
-import { LoggedUser } from 'src/auth/logged-user.decorator';
-import { User } from '@prisma/client';
 
 @ApiTags('user')
 @Controller('user')
@@ -57,7 +55,7 @@ export class UserController {
   @ApiOperation({
     summary: 'Deletar um usuário pelo id',
   })
-  remove(@LoggedUser() user: User, @Param('id') id: string) {
+  remove(@Param('id') id: string) {
     return this.userService.delete(id);
   }
 }

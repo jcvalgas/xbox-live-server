@@ -18,16 +18,16 @@ export class GamesController {
     @ApiOperation({
         summary: 'Listar todos os jogos',
     })
-    findAll(){
-        return this.gamesService.findAll();
+    findAll(@LoggedUser() user: User){
+        return this.gamesService.findAll(user.isAdmin);
     }
 
     @Get(':id')
     @ApiOperation({
         summary: 'Visualizar um jogo pelo id',
     })
-    findOne(@Param('id') id: string){
-        return this.gamesService.findOne(id)
+    findOne(@LoggedUser() user: User, @Param('id') id: string){
+        return this.gamesService.findOne(user.isAdmin, id)
     }
 
     @Post()
