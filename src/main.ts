@@ -6,12 +6,10 @@ import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
-    cors: {
-      origin: 'http://localhost:3333'
-    }
+    cors: true,
   });
 
-  app.set('trusty proxy', 1);
+  app.set('trust proxy', 1);
 
   app.useGlobalPipes(new ValidationPipe());
 
