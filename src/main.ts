@@ -18,6 +18,7 @@ async function bootstrap() {
     .setDescription('Aplicação para marketplace de jogos para Xbox')
     .setVersion('1.0.0')
     .addTag('status')
+    .addTag('homepage')
     .addTag('auth')
     .addTag('games')
     .addTag('gender')
