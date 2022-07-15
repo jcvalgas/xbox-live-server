@@ -16,7 +16,6 @@ export class AuthService {
     const { email, password } = loginDto;
     const user = await this.prismaService.user.findUnique({
       where: { email },
-      include: { profiles: true },
     });
 
     if (!user) {
